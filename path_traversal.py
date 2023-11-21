@@ -1,29 +1,17 @@
-import os.path
-from flask import Flask, request, abort, send_file
+urlpatterns = [
+    # Route to code_execution
+    url(r'^code-ex1$', code_execution_bad, name='code-execution-bad'),
+    url(r'^code-ex2$', code_execution_good, name='code-execution-good')
+]
 
-app = Flask(__name__)
+def code_execution(request):
+    if request.method == 'POST':
+        first_name = base64.decodestring(request.POST.get('first_name', ''))
+        #BAD -- Allow user to define code to be run.
+        exec("setname('%s')" % first_name)
 
-def is_valid_file_path(filename):
-    # Implement your logic to validate the filename
-    # For example, check if the filename is in an allowed directory
-    allowed_directory = "/path/to/allowed_directory"
-    full_path = os.path.join(allowed_directory, filename)
-    return os.path.exists(full_path) and full_path.startswith(allowed_directory)
-
-def get_file_data(filename):
-    # Implement your logic to read and return the file data
-    # Here, we use Flask's send_file function for better security
-    return send_file(filename, as_attachment=True)
-
-@app.route("/user_picture1")
-def user_picture1():
-    filename = request.args.get('p')
-
-    if is_valid_file_path(filename):
-        return get_file_data(filename)
-    else:
-        # Handle invalid file requests, for example, return an error response
-        return "Invalid file request", 400
-
-if __name__ == '__main__':
-    app.run(debug=True)
+def code_execution(request):
+    if request.method == 'POST':
+        first_name = base64.decodestring(request.POST.get('first_name', ''))
+        #GOOD --Call code directly
+        setname(first_name)
