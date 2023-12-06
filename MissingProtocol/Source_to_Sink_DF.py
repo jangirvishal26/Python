@@ -6,9 +6,13 @@ def create_insecure_ssl_connection(host, port):
     connection = socket.create_connection((host, port))
     
     # Wrap the socket with an SSL context without specifying the protocol version
-    ssl_connection = ssl.wrap_socket(connection, ssl_version=ssl.PROTOCOL_SSLv23)
+    ssl_connection = wrap_insecure_ssl(connection)
 
     return ssl_connection
+
+def wrap_insecure_ssl(connection):
+    # Wrap the socket with an SSL context without specifying the protocol version
+    return ssl.wrap_socket(connection, ssl_version=ssl.PROTOCOL_SSLv23)
 
 def process_secure_data(connection):
     try:
@@ -34,7 +38,3 @@ if __name__ == "__main__":
         print(f"Connected to {target_host}:{target_port} with insecure SSL/TLS configuration.")
 
         # Process secure data in a separate method
-        process_secure_data(insecure_connection)
-
-    except Exception as e:
-        print(f"Error: {e}")
