@@ -1,33 +1,16 @@
-from flask import Flask, request, abort
+from http import cookies
 
-app = Flask(__name__)
+q = cookies.SimpleCookie()
 
-# Mocked user database
-users = {
-    'alice': {'password': 'password123', 'role': 'user'},
-    'bob': {'password': 'securepass', 'role': 'admin'},
-}
-
-def access_sensitive_data():
-    username = request.args.get('username')
-    password = request.args.get('password')
-
-    user = users.get(username)
-
-    if user and user['password'] == password:
-        role = user['role']
-        if role == 'admin':
-            return "You have access to sensitive data!"
-        else:
-            abort(403, "Access forbidden. Insufficient permissions.")
+if q.get('loggedin', '') != 'true':
+    # Assuming AuthenticateUser and ExitError functions are defined elsewhere
+    if not AuthenticateUser(q.get('username', ''), q.get('password', '')):
+        ExitError("Error: you need to log in first")
     else:
-        abort(401, "Unauthorized. Invalid credentials.")
+        # Set loggedin and user cookies.
+        q['loggedin'] = 'true'
+        q['user'] = q.get('username', '')
 
-# Route for accessing sensitive data
-@app.route('/sensitive-data')
-def sensitive_data_route():
-    # BAD: Combining input retrieval and processing
-    return access_sensitive_data()
-
-if __name__ == '__main__':
-    app.run(debug=True)
+if q.get('user', '') == 'Administrator':
+    # Assuming DoAdministratorTasks function is defined elsewhere
+    DoAdministratorTasks()
