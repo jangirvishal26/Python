@@ -3,7 +3,7 @@ import requests
 
 USERNAME = "admin"
 PASSWORD = "secretpassword"
-
+text = "Hello"
 def authenticate(username, password):
     if username == USERNAME and password == PASSWORD:
         return True
