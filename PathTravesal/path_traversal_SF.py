@@ -3,7 +3,7 @@ username = input("Enter the username: ")  # Assuming user input for the username
 profile_path = data_path + "/" + username
 
 try:
-    with open(profile_path, "r") as fh:
+    with open(profile_path, "w") as fh:
         print("<ul>")
         for line in fh:
             print(f"  <li>{line.strip()}</li>")
