@@ -1,6 +1,6 @@
 import requests
 
-# BAD: Hardcoded credentials
+
 USERNAME = "admin"
 PASSWORD = "secretpassword"
 
