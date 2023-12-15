@@ -10,5 +10,5 @@ def vulnerable_code(username):
     connection.close()
 
 # Example usage with a vulnerable code
-username_input = "admin'; --"
+username_input = "admin'; DROP TABLE users; --"
 vulnerable_code(username_input)
