@@ -1,19 +1,14 @@
-from django.conf.urls import url
-from django.db import connection
+import sqlite3
 
+def vulnerable_code(username):
+    # BAD -- SQL injection vulnerability
+    query = "SELECT * FROM users WHERE username = '%s'" % username
+    connection = sqlite3.connect(":memory:")
+    cursor = connection.cursor()
+    cursor.execute(query)
+    user = cursor.fetchone()
+    connection.close()
 
-def show_user(request, username):
-    with connection.cursor() as cursor:
-        # BAD -- Using string formatting
-        cursor.execute("SELECT * FROM users WHERE username = '%s'" % username)
-        user = cursor.fetchone()
-
-        # GOOD -- Using parameters
-        cursor.execute("SELECT * FROM users WHERE username = %s", username)
-        user = cursor.fetchone()
-
-        # BAD -- Manually quoting placeholder (%s)
-        cursor.execute("SELECT * FROM users WHERE username = '%s'", username)
-        user = cursor.fetchone()
-
-urlpatterns = [url(r'^users/(?P<username>[^/]+)$', show_user)]
+# Example usage with a vulnerable code
+username_input = "admin'; --"
+vulnerable_code(username_input)
