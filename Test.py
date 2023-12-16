@@ -1,10 +1,10 @@
 import sqlite3
 
-user_input = get_user_input()  # Assume this function properly validates and sanitizes user input
-query = f"SELECT * FROM Users WHERE Username ='{user_input}'"
+user_input = get_user_input()
+query = f"SELECT * FROM Users WHERE Username = '{user_input}'"
 
-# Execute the query using parameterized approachuser_input
+# Execute the query (assuming a SQLite database for illustration)
 connection = sqlite3.connect("example.db")
 cursor = connection.cursor()
-cursor.execute(query, (user_input,))
+cursor.execute(query)
 result = cursor.fetchall()
