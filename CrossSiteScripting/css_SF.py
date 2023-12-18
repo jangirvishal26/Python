@@ -12,7 +12,7 @@ def xss_vulnerable():
     <html>
     <head><title>XSS Vulnerable Page</title></head>
     <body>
-        <h1>Hello, {{ user_input }}!</h1>
+        <h1>Hello, {{ user_input | safe }}!</h1>
     </body>
     </html>
     """
