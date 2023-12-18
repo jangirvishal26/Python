@@ -23,4 +23,4 @@ def xss_vulnerable():
     return rendered_template
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
