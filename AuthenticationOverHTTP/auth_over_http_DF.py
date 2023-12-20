@@ -1,22 +1,28 @@
-from flask import Flask, request, jsonify
-
-app = Flask(__name__)
+import requests
 
 def get_credentials():
-    username = request.form.get('username')
-    password = request.form.get('password')
+    username = input("Enter your username: ")
+    password = input("Enter your password: ")
     return username, password
 
-def authenticate(username, password):
-    if username == 'admin' and password == 'password':
-        return jsonify({'message': 'Login successful'})
+def send_credentials_over_http(username, password):
+    # This is a vulnerability (CWE-319) - Transmitting sensitive information over HTTP without encryption
+    url = "http://example.com/login"
+    full_url = f"{url}?username={username}&password={password}"
+
+    # Sending the request over HTTP
+    response = requests.get(full_url)
+
+    # Check the response (for demonstration purposes)
+    if response.status_code == 200:
+        print("Login successful")
     else:
-        return jsonify({'message': 'Login failed'})
+        print("Login failed")
 
-@app.route('/login', methods=['POST'])
-def login():
+def process_login():
     username, password = get_credentials()
-    return authenticate(username, password)
+    # Assume some processing or validation here
+    send_credentials_over_http(username, password)
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+if __name__ == "__main__":
+    process_login()
