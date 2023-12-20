@@ -1,38 +1,24 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
-from urllib.parse import parse_qs
+import requests
 
-class SimpleRequestHandler(BaseHTTPRequestHandler):
-    def do_POST(self):
-        content_length = int(self.headers['Content-Length'])
-        body = self.rfile.read(content_length).decode('utf-8')
+def send_sensitive_data(username, password):
+    # This is a vulnerable example where sensitive information is sent over HTTP without encryption
+    url = "http://example.com/login"
+    
+    # Concatenate the username and password in the URL
+    # Note: This is just an example, and you should never transmit sensitive data like this in a real application
+    full_url = f"{url}?username={username}&password={password}"
 
-        # Parse the form data
-        form_data = parse_qs(body)
+    # Sending the request
+    response = requests.get(full_url)
 
-        # Retrieve username and password from form data
-        username = form_data.get('username', [''])[0]
-        password = form_data.get('password', [''])[0]
+    # Check the response
+    if response.status_code == 200:
+        print("Login successful")
+    else:
+        print("Login failed")
 
-        # Authenticate the user
-        response_message = self.authenticate(username, password)
+# Example usage
+username = "john_doe"
+password = "super_secret_password"
 
-        # Send the response
-        self.send_response(200)
-        self.send_header('Content-type', 'application/json')
-        self.end_headers()
-        self.wfile.write(response_message.encode('utf-8'))
-
-    def authenticate(self, username, password):
-        if username == 'admin' and password == 'password':
-            return '{"message": "Login successful"}'
-        else:
-            return '{"message": "Login failed"}'
-
-def run_server(port=5000):
-    server_address = ('', port)
-    httpd = HTTPServer(server_address, SimpleRequestHandler)
-    print(f'Starting server on port {port}...')
-    httpd.serve_forever()
-
-if __name__ == '__main__':
-    run_server()
+send_sensitive_data(username, password)
