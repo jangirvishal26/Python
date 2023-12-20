@@ -1,14 +1,14 @@
-import os
-
 data_path = "/users/cwe/profiles"
-username = input("Enter username: ")
-profile_path = os.path.join(data_path, username)
+username = input("Enter the username: ")
+profile_path = data_path + "/" + username  # Vulnerability introduced by direct string concatenation
 
 try:
-    with open(profile_path, 'r') as fh:
+    with open(profile_path, 'r') as file:
         print("<ul>")
-        for line in fh:
+        for line in file:
             print(f"<li>{line.strip()}</li>")
         print("</ul>")
+except FileNotFoundError:
+    print("Profile not found.")
 except Exception as e:
-    print(f"profile read error: {profile_path}")
+    print(f"An error occurred: {e}")
