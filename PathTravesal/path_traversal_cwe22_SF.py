@@ -1,14 +1,8 @@
-data_path = "/users/cwe/profiles"
-username = input("Enter the username: ")
-profile_path = data_path + "/" + username  # Vulnerability introduced by direct string concatenation
+import tarfile
 
-try:
-    with open(profile_path, 'r') as file:
-        print("<ul>")
-        for line in file:
-            print(f"<li>{line.strip()}</li>")
-        print("</ul>")
-except FileNotFoundError:
-    print("Profile not found.")
-except Exception as e:
-    print(f"An error occurred: {e}")
+def untar_image(path, filename):
+    tar_file = tarfile.open(filename, 'r|gz')
+    tar_file.extract_all(path)
+    image_file = tar_file.get_names()[0]
+    tar_file.close()
+    return os.path.join(path, image_file)
