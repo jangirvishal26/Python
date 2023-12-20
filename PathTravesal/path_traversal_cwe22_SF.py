@@ -1,8 +1,15 @@
-import tarfile
+import os
+from flask import Flask, redirect, request, send_file
 
-def untar_image(path, filename):
-    tar_file = tarfile.open(filename, 'r|gz')
-    tar_file.extract_all(path)
-    image_file = tar_file.get_names()[0]
-    tar_file.close()
-    return os.path.join(path, image_file)
+app = Flask(__name__)
+
+@app.route('/')
+def cat_picture():
+    image_name = request.args.get('image_name')
+    if not image_name:
+        return 404
+    return send_file(os.path.join(os.getcwd(), image_name))
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
