@@ -1,14 +1,30 @@
 import sqlite3
 
-def vulnerable_code(username):
-    # BAD -- SQL injection vulnerability
-    query = "SELECT * FROM users WHERE username = '%s'" % username
-    connection = sqlite3.connect(":memory:")
-    cursor = connection.cursor()
-    cursor.execute(query)
-    user = cursor.fetchone()
-    connection.close()
+# Assuming ctx.getAuthenticatedUserName() returns the authenticated user's name
+userName = ctx.getAuthenticatedUserName()
 
-# Example usage with a vulnerable code
-username_input = "admin'; DROP TABLE users; --"
-vulnerable_code(username_input)
+# Assuming ItemName.Text is user-provided input
+itemName = ItemName.Text
+
+# Constructing the SQL query (vulnerable to SQL injection)
+query = f"SELECT * FROM items WHERE owner = '{userName}' AND itemname = '{itemName}'"
+
+# Establishing a connection to the database (replace with your actual database connection)
+conn = sqlite3.connect("your_database.db")
+
+# Creating a cursor
+cursor = conn.cursor()
+
+# Executing the query
+cursor.execute(query)
+
+# Fetching the results
+results = cursor.fetchall()
+
+# Processing the results as needed
+for row in results:
+    print(row)
+
+# Closing the cursor and connection
+cursor.close()
+conn.close()
