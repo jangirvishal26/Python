@@ -5,5 +5,33 @@ Files ending with _SF.py having source and sink in same method wheras _DF.py hav
 
 
 
+CWEs Coverage as per folder:
+
+AuthenticationOverHTTP - 
+BindingNetworkInterface -
+BrokenUserAuth - 
+CSRF - 
+CrossSiteScripting - 
+CryptographicIssues - 
+DeserializationOfUntrustedData - 
+Exception - 
+HardCodedCryptographic - 
+HardCodedPassword - 
+ImproperAuthentication - 
+ImproperCertificateVerification - 
+IncompleteUrlSanitization - 
+InSecureDefaultValue - 
+Injection - 
+InsecureTemporaryFile - 
+MissingProtocol - 
+OpenRedirect - 
+OriginValidationError - 
+PathTraversal - 
+Permission -
+REDOS - 
+ServerInformationExposure - 
+SqlInjection - 
+
+
 
 
