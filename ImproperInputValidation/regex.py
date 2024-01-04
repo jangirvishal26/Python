@@ -1,19 +1,15 @@
-from flask import Flask, request, redirect
 import re
 
-app = Flask(__name__)
+def unsafe_redirect(input_url):
+    # Unsafe regular expression
+    unsafe_regex = re.compile("(www|beta).example.com/")
 
-UNSAFE_REGEX = re.compile("(www|beta).example.com/")
-SAFE_REGEX = re.compile(r"(www|beta)\.example\.com/")
+    if unsafe_regex.match(input_url):
+        print(f"Redirecting to: {input_url}")
+        # Perform the redirect (simulate redirection)
+    else:
+        print("Invalid redirect target")
 
-@app.route('/some/path/bad')
-def unsafe(request):
-    target = request.args.get('target', '')
-    if UNSAFE_REGEX.match(target):
-        return redirect(target)
-
-@app.route('/some/path/good')
-def safe(request):
-    target = request.args.get('target', '')
-    if SAFE_REGEX.match(target):
-        return redirect(target)
+# Example usage
+user_input = "wwwXexample.com"
+unsafe_redirect(user_input)
