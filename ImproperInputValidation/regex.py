@@ -11,5 +11,10 @@ def unsafe_redirect(input_url):
         print("Invalid redirect target")
 
 # Example usage
-user_input = "wwwXexample.com"
-unsafe_redirect(user_input)
+def simulate_attack():
+    # Exploiting the vulnerability with crafted input
+    crafted_input = "wwwXexample.com"
+    unsafe_redirect(crafted_input)
+
+# Simulate the attack
+simulate_attack()
