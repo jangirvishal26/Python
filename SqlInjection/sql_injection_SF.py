@@ -7,7 +7,7 @@ userName = ctx.getAuthenticatedUserName()
 itemName = ItemName.Text
 
 # Constructing the SQL query (vulnerable to SQL injection)
-query = f"SELECT * FROM items WHERE owner = '{userName}' AND itemname = '{itemName}'"
+sql_query = f"SELECT * FROM items WHERE owner = '{userName}' AND itemname = '{itemName}'"
 
 # Establishing a connection to the database (replace with your actual database connection)
 conn = sqlite3.connect("your_database.db")
@@ -16,7 +16,7 @@ conn = sqlite3.connect("your_database.db")
 cursor = conn.cursor()
 
 # Executing the query
-cursor.execute(query)
+cursor.execute(sql_query)
 
 # Fetching the results
 results = cursor.fetchall()
