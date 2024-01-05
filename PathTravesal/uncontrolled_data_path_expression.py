@@ -3,25 +3,37 @@ from flask import Flask, request, abort
 
 app = Flask(__name__)
 
-@app.route("/user_picture1")
-def user_picture1():
-    filename = request.args.get('p')
-    data = open(filename, 'rb').read()
+def read_picture_from_path(path):
+    data = open(path, 'rb').read()
     return data
 
-@app.route("/user_picture2")
+def validate_path(base_path, full_path):
+    full_path = os.path.normpath(full_path)
+    if not full_path.startswith(base_path):
+        raise Exception("Not allowed")
+
+def user_picture1():
+    filename = request.args.get('p')
+    data = read_picture_from_path(filename)
+    return data
+
 def user_picture2():
     base_path = '/server/static/images'
     filename = request.args.get('p')
-    data = open(os.path.join(base_path, filename), 'rb').read()
+    full_path = os.path.join(base_path, filename)
+    validate_path(base_path, full_path)
+    data = read_picture_from_path(full_path)
     return data
 
-@app.route("/user_picture3")
 def user_picture3():
     base_path = '/server/static/images'
     filename = request.args.get('p')
-    fullpath = os.path.normpath(os.path.join(base_path, filename))
-    if not fullpath.startswith(base_path):
-        raise Exception("not allowed")
-    data = open(fullpath, 'rb').read()
+    full_path = os.path.join(base_path, filename)
+    validate_path(base_path, full_path)
+    data = read_picture_from_path(full_path)
     return data
+
+# Route mappings
+app.route("/user_picture1")(user_picture1)
+app.route("/user_picture2")(user_picture2)
+app.route("/user_picture3")(user_picture3)
