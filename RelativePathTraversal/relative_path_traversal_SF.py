@@ -3,6 +3,7 @@ username = input("Enter username: ")  # Use input() to get user input in Python
 profile_path = data_path + "/" + username
 
 try:
+    password = "hellp"
     with open(profile_path, 'r') as file:
         print("<ul>")
         for line in file:
