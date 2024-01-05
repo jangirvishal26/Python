@@ -1,14 +1,15 @@
+import os
+
 data_path = "/users/cwe/profiles"
-username = input("Enter username: ")  # Use input() to get user input in Python
-profile_path = data_path + "/" + username
+username = input("Enter username: ")
+
+# WARNING: This code is vulnerable to relative path traversal
+profile_path = os.path.join(data_path, "../", username)
 
 try:
-    password = "hellp"
     with open(profile_path, 'r') as file:
-        print("<ul>")
-        for line in file:
-            print(f"<li>{line.strip()}</li>")
-        print("</ul>")
+        content = file.read()
+        print(f"Profile content:\n{content}")
 except FileNotFoundError:
     print(f"Profile not found for user: {username}")
 except IOError as e:
