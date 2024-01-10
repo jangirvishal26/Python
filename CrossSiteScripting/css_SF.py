@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/xss')
 def xss_vulnerable():
-    # Source: User input from the 'name' parameter
+    # vulnerable cross site scripting code
     user_input = request.args.get('name', '')
     
     # Sink: Incorporating user input into an HTML template without proper escaping
