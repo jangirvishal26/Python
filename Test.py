@@ -1,10 +1,9 @@
-import sqlite3
+import zipfile
+import os
 
-user_input = get_user_input()
-query = f"SELECT * FROM Users WHERE Username = '{user_input}'"
-
-# Execute the query (assuming a SQLite database for illustration)
-connection = sqlite3.connect("example.db")
-cursor = connection.cursor()
-cursor.execute(query)
-result = cursor.fetchall()
+with zipfile.ZipFile('archive.zip', 'r') as zip_ref:
+    for file_info in zip_ref.infolist():
+        file_name = file_info.filename
+        # WARNING: This could write any file on the filesystem.
+        with zip_ref.open(file_name) as source, open(file_name, 'wb') as sink:
+            sink.write(source.read())
