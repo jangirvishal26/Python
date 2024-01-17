@@ -14,10 +14,9 @@ user_database = {
     'bob': CSRFUser('bob', 500),
 }
 
-def authenticate_user(request):
+def get_user_from_cookie(cookie):
     try:
-        # Simulating JWT authentication
-        cookie = request.COOKIES.get('auth_cookie')
+        # Source: Reading 'auth_cookie' and decoding the JWT
         payload = jwt.decode(cookie, 'secret_key', algorithms=['HS256'])
         username = payload['username']
         return user_database.get(username)
@@ -25,14 +24,18 @@ def authenticate_user(request):
         print(f"Authentication error: {str(e)}")
         return None
 
+def modify_user_balance(user, amount):
+    # Sink: Modifying the user's balance
+    user.balance -= amount
+
 @csrf_exempt
 def csrf_transfer_money(request):
     if request.method == 'POST':
-        user = authenticate_user(request)
+        user = get_user_from_cookie(request.COOKIES.get('auth_cookie'))
 
         if user is not None:
             amount = int(request.POST.get('amount', 0))
-            user.balance -= amount  # Sink: Modifying the user's balance
+            modify_user_balance(user, amount)
 
             return render(request, 'csrf_dashboard.html', {'balance': user.balance})
         else:
