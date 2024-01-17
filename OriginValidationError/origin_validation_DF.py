@@ -2,24 +2,23 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 
 class SimpleHandler(BaseHTTPRequestHandler):
     def get_origin(self):
-        # Extract the origin from the request headers
+        # Source: Insecure origin validation
         return self.headers.get('Origin', '')
 
-    def send_response_with_cors(self, origin):
-        # Allow requests from any origin (vulnerable)
+    def set_cors_headers(self):
+        # Sink: Allow requests from any origin (vulnerable)
         self.send_response(200)
-        self.send_header('Access-Control-Allow-Origin', origin)
+        self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
+
+    def do_GET(self):
+        origin = self.get_origin()
+        
+        # Set CORS headers
+        self.set_cors_headers()
 
         # Send a simple response
         self.wfile.write(b'Hello, this is the server!')
-
-    def do_GET(self):
-        # Insecure origin validation
-        origin = self.get_origin()
-
-        # Send the response with CORS headers
-        self.send_response_with_cors(origin)
 
 if __name__ == '__main__':
     try:
