@@ -16,12 +16,17 @@ def insecure_aes_encrypt(data, key):
 
     return encrypted_data
 
+def encrypt_data_and_print(data, key):
+    # Encrypt the data using the insecure_aes_encrypt method
+    encrypted_data = insecure_aes_encrypt(data, key)
+
+    # Print the original and encrypted data
+    print(f"Original Data: {data}")
+    print(f"Encrypted data: {encrypted_data.hex()}")
+
 # Hardcoded cryptographic key with inadequate encryption strength (128 bits)
 encryption_key = b'\x01\x23\x45\x67\x89\xab\xcd\xef\xfe\xdc\xba\x98\x76\x54\x32\x10'
 
 # Example usage (for educational purposes only)
 plaintext_data = b'Sensitive data'
-encrypted_data = insecure_aes_encrypt(plaintext_data, encryption_key)
-
-print(f"Original Data: {plaintext_data}")
-print(f"Encrypted data: {encrypted_data.hex()}")
+encrypt_data_and_print(plaintext_data, encryption_key)
