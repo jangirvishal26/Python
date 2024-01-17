@@ -1,51 +1,27 @@
-from Crypto.Cipher import DES
-from Crypto.Random import get_random_bytes
-from base64 import b64encode, b64decode
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.backends import default_backend
 
-def weak_encrypt(data, key):
+def insecure_aes_encrypt(data, key):
     # WARNING: This is an example to demonstrate CWE-326 and should not be used in production!
 
-    # Ensure the key length is exactly 8 bytes for DES
-    key = key[:8].ljust(8, b'\0')
+    # Use AES-ECB with a hardcoded key (128-bit)
+    cipher = Cipher(algorithms.AES(key), modes.ECB(), backend=default_backend())
+    encryptor = cipher.encryptor()
 
-    # Create a DES cipher object with the weak key
-    cipher = DES.new(key, DES.MODE_ECB)
-
-    # Pad the data to be a multiple of 8 bytes (DES block size)
-    padded_data = data.ljust(len(data) + (8 - len(data) % 8) % 8, b'\0')
+    # Pad the data to be a multiple of AES_BLOCK_SIZE
+    padded_data = data.ljust(len(data) + (16 - len(data) % 16) % 16)
 
     # Encrypt the padded data
-    encrypted_data = cipher.encrypt(padded_data)
+    encrypted_data = encryptor.update(padded_data.encode()) + encryptor.finalize()
 
-    # Return the base64-encoded encrypted data
-    return b64encode(encrypted_data).decode('utf-8')
+    return encrypted_data
 
-def weak_decrypt(encrypted_data, key):
-    # WARNING: This is an example to demonstrate CWE-326 and should not be used in production!
-
-    # Ensure the key length is exactly 8 bytes for DES
-    key = key[:8].ljust(8, b'\0')
-
-    # Create a DES cipher object with the weak key
-    cipher = DES.new(key, DES.MODE_ECB)
-
-    # Decode the base64-encoded encrypted data
-    encrypted_data = b64decode(encrypted_data)
-
-    # Decrypt the data
-    decrypted_data = cipher.decrypt(encrypted_data)
-
-    # Remove padding
-    unpadded_data = decrypted_data.rstrip(b'\0')
-
-    return unpadded_data.decode('utf-8')
+# Hardcoded cryptographic key with inadequate encryption strength (128 bits)
+encryption_key = b'\x01\x23\x45\x67\x89\xab\xcd\xef\xfe\xdc\xba\x98\x76\x54\x32\x10'
 
 # Example usage (for educational purposes only)
-data_to_encrypt = "SensitiveData123"
-encryption_key = get_random_bytes(8)
+plaintext_data = b'Sensitive data'
+encrypted_data = insecure_aes_encrypt(plaintext_data, encryption_key)
 
-encrypted_data = weak_encrypt(data_to_encrypt.encode('utf-8'), encryption_key)
-print(f"Encrypted Data: {encrypted_data}")
-
-decrypted_data = weak_decrypt(encrypted_data, encryption_key)
-print(f"Decrypted Data: {decrypted_data}")
+print(f"Original Data: {plaintext_data}")
+print(f"Encrypted data: {encrypted_data.hex()}")
