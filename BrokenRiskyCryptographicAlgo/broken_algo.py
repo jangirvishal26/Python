@@ -1,16 +1,27 @@
-import hashlib
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.backends import default_backend
 
-def insecure_md5_hash(data):
-    # WARNING: This is an example to demonstrate CWE-327 and should not be used in production!
+def insecure_aes_encrypt(data, key):
+    # WARNING: This is an example to demonstrate CWE-326 and should not be used in production!
 
-    # Use insecure MD5 hash function
-    md5_hash = hashlib.md5(data.encode()).hexdigest()
+    # Use AES-ECB with a hardcoded key (128-bit)
+    cipher = Cipher(algorithms.AES(key), modes.ECB(), backend=default_backend())
+    encryptor = cipher.encryptor()
 
-    return md5_hash
+    # Pad the data to be a multiple of AES_BLOCK_SIZE
+    padded_data = data.ljust(len(data) + (16 - len(data) % 16) % 16)
+
+    # Encrypt the padded data
+    encrypted_data = encryptor.update(padded_data.encode()) + encryptor.finalize()
+
+    return encrypted_data
+
+# Hardcoded cryptographic key with inadequate encryption strength (128 bits)
+encryption_key = b'\x01\x23\x45\x67\x89\xab\xcd\xef\xfe\xdc\xba\x98\x76\x54\x32\x10'
 
 # Example usage (for educational purposes only)
-data_to_hash = "SensitiveData123"
-hashed_data = insecure_md5_hash(data_to_hash)
+plaintext_data = b'Sensitive data'
+encrypted_data = insecure_aes_encrypt(plaintext_data, encryption_key)
 
-print(f"Original Data: {data_to_hash}")
-print(f"Insecure MD5 Hash: {hashed_data}")
+print(f"Original Data: {plaintext_data}")
+print(f"Encrypted data: {encrypted_data.hex()}")
