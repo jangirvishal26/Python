@@ -1,18 +1,21 @@
-import logging
+from flask import Flask, redirect, request
 
-def process_payment(user_data):
-    # ... payment processing logic ...
+app = Flask(__name__)
 
-    # Debug code left active in production, logging sensitive information
-    logging.debug(f"Payment processed for user: {user_data['username']}, amount: {user_data['amount']}")
+def get_user_input():
+    # Source: Obtaining user input
+    return request.args.get('url')
 
-    # ... more payment processing logic ...
+def generate_redirect_url(redirect_path):
+    # Sink: Generating the redirect URL
+    base_url = "http://example.com"
+    return f"{base_url}{redirect_path}"
 
-# Production code that calls the function
-user_data = {
-    'username': 'example_user',
-    'amount': 100.00,
-    # ... other sensitive information ...
-}
+@app.route('/redirect', methods=['GET'])
+def redirect_user():
+    redirect_path = get_user_input()
+    redirect_url = generate_redirect_url(redirect_path)
+    return redirect(redirect_url)
 
-process_payment(user_data)
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
