@@ -1,11 +1,11 @@
 import requests
 
-def send_password_over_http(username, password):
-    # WARNING: This is an example to demonstrate CWE-319 and should not be used in production!
-
+def construct_url(username, password):
     # Construct URL with sensitive information
     url = f"http://example.com/login?username={username}&password={password}"
+    return url
 
+def send_request(url):
     # Send HTTP request with sensitive information
     response = requests.get(url)
 
@@ -13,4 +13,11 @@ def send_password_over_http(username, password):
     print(response.text)
 
 # Example usage (for educational purposes only)
-send_password_over_http("example_user", "example_password")
+username = "example_user"
+password = "example_password"
+
+# Source: Constructing the URL with sensitive information
+url_with_sensitive_info = construct_url(username, password)
+
+# Sink: Sending the HTTP request
+send_request(url_with_sensitive_info)
