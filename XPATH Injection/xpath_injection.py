@@ -30,6 +30,26 @@
 # if __name__ == "__main__":
 #     main()
 
+# from lxml import etree
+# from io import StringIO
+
+# from django.urls import path
+# from django.http import HttpResponse
+# from django.template import Template, Context, Engine, engines
+
+
+# def a(request):
+#     value = request.GET['xpath']
+#     f = StringIO('<foo><bar></bar></foo>')
+#     tree = etree.parse(f)
+#     r = tree.xpath("/tag[@id='%s']" % value)
+
+
+# urlpatterns = [
+#     path('a', a)
+# ]
+
+
 from lxml import etree
 from io import StringIO
 
@@ -37,14 +57,27 @@ from django.urls import path
 from django.http import HttpResponse
 from django.template import Template, Context, Engine, engines
 
-
 def a(request):
-    value = request.GET['xpath']
-    f = StringIO('<foo><bar></bar></foo>')
-    tree = etree.parse(f)
-    r = tree.xpath("/tag[@id='%s']" % value)
+    value = get_user_input(request)
+    tree = parse_xml_data()
+    perform_xpath_query(tree, value)
 
+def get_user_input(request):
+    # Source: Sensitive data obtained from user input
+    return request.GET['xpath']
+
+def parse_xml_data():
+    # Simulating sensitive XML data
+    xml_data = '<foo><tag id="123"></tag></foo>'
+    f = StringIO(xml_data)
+    return etree.parse(f)
+
+def perform_xpath_query(tree, value):
+    # Sink: User input concatenated into the XPath query (vulnerable)
+    result = tree.xpath("/foo/tag[@id='%s']" % value)
+    return result
 
 urlpatterns = [
     path('a', a)
 ]
+
